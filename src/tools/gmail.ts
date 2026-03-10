@@ -593,7 +593,8 @@ Returns:
 Args:
   - to (string[]): Array of recipient email addresses (required)
   - subject (string): Email subject line
-  - body (string): Email body content (plain text)
+  - body (string): Email body content (plain text or HTML depending on content_type)
+  - content_type (string, optional): MIME content type - "text/plain" (default) or "text/html"
   - cc (string[], optional): Array of CC recipient email addresses
   - bcc (string[], optional): Array of BCC recipient email addresses
   - reply_to_message_id (string, optional): Message ID to reply to (for creating reply drafts)
@@ -636,7 +637,7 @@ Examples:
         // Build raw email message
         const emailLines = [
           ...headers,
-          "Content-Type: text/plain; charset=utf-8",
+          `Content-Type: ${params.content_type || "text/plain"}; charset=utf-8`,
           "",
           params.body
         ];

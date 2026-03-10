@@ -84,7 +84,11 @@ export const CreateDraftSchema = z.object({
   subject: z.string()
     .describe("Email subject line"),
   body: z.string()
-    .describe("Email body content (plain text)"),
+    .describe("Email body content (plain text or HTML depending on content_type)"),
+  content_type: z.enum(["text/plain", "text/html"])
+    .optional()
+    .default("text/plain")
+    .describe("MIME content type for the email body (default: text/plain)"),
   cc: z.array(z.string())
     .optional()
     .describe("Array of CC recipient email addresses"),

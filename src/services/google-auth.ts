@@ -1,7 +1,6 @@
-import { OAuth2Client } from "google-auth-library";
-import { google, docs_v1, drive_v3, sheets_v4, gmail_v1, calendar_v3 } from "googleapis";
+import { google, Auth, docs_v1, drive_v3, sheets_v4, gmail_v1, calendar_v3 } from "googleapis";
 
-let oauth2Client: OAuth2Client | null = null;
+let oauth2Client: Auth.OAuth2Client | null = null;
 let docsClient: docs_v1.Docs | null = null;
 let driveClient: drive_v3.Drive | null = null;
 let sheetsClient: sheets_v4.Sheets | null = null;
@@ -19,7 +18,7 @@ export function initializeGoogleAuth(): void {
     );
   }
 
-  oauth2Client = new OAuth2Client(clientId, clientSecret);
+  oauth2Client = new google.auth.OAuth2(clientId, clientSecret);
   oauth2Client.setCredentials({ refresh_token: refreshToken });
 
   docsClient = google.docs({ version: "v1", auth: oauth2Client });

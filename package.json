@@ -44,8 +44,7 @@
   "homepage": "https://github.com/nityeshaga/google-workspace-mcp-server#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.1",
-    "google-auth-library": "^9.14.0",
-    "googleapis": "^144.0.0",
+    "googleapis": "^178.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

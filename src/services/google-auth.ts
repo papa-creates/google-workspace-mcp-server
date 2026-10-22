@@ -63,23 +63,35 @@ export function getCalendarClient(): calendar_v3.Calendar {
   return calendarClient;
 }
 
+// Google API errors (GaxiosError) carry the HTTP status as a number on
+// `status`, `response.status` or `code`. The message is Google's text, e.g.
+// "The caller does not have permission", and never contains the number.
+function getHttpStatus(error: Error): number | undefined {
+  const e = error as { status?: unknown; code?: unknown; response?: { status?: unknown } };
+  for (const value of [e.status, e.response?.status, e.code]) {
+    if (typeof value === "number") return value;
+  }
+  return undefined;
+}
+
 export function handleGoogleError(error: unknown): string {
   if (error instanceof Error) {
     const message = error.message;
+    const status = getHttpStatus(error);
 
-    if (message.includes("401") || message.includes("invalid_grant")) {
+    if (status === 401 || message.includes("invalid_grant")) {
       return "Error: Authentication failed. Please check your Google OAuth credentials and refresh token.";
     }
-    if (message.includes("403")) {
-      return "Error: Permission denied. Ensure the OAuth token has the required scopes (documents, drive).";
+    if (status === 403) {
+      return `Error: Permission denied. Ensure the OAuth token has the required scopes and access to this item. ${message}`;
     }
-    if (message.includes("404")) {
-      return "Error: Resource not found. Please check the document or comment ID.";
+    if (status === 404) {
+      return `Error: Resource not found. Please check the ID. ${message}`;
     }
-    if (message.includes("429")) {
+    if (status === 429) {
       return "Error: Rate limit exceeded. Please wait before making more requests.";
     }
-    if (message.includes("400")) {
+    if (status === 400) {
       return `Error: Invalid request. ${message}`;
     }
 
